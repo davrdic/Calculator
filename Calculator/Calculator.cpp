@@ -1,39 +1,10 @@
-/*
-Tip: THE CODE BELOW IS EXAMPLE CODE. FOR LEARNING PURPOSES ONLY
-*/
-
-/*
-Tip: Tips are just that, tips. Everything else is comments I
-would call acceptable with my limited experience
-*/
-
-/*
-Tip: I think you typically start with all or your #includes, no
-comment necessary here unless one is unique. or you might group
-them. we'll get to that later
-*/
-
 #include "Facilities.h"
 
 /*
-Tip: after that, you could give this shitty code a general 
-description so people will know what it is without having to 
-look further
-*/
-
-/*
-
 Calculator program:
 
 This program reads simple mathematical expressions entered
 by the user and calculates and displays the results
-
-*/
-
-/*
-Tip: Let's start by defining our user defined types (classes)
-and their member functions. This would typically be done
-elsewhere and each class would have its own file
 */
 
 /*
@@ -78,11 +49,6 @@ private:
 };
 
 /*
-Tip: Don't quote me on this, but this class needs a constructor to initialize
-its private variable. I think constuctors are usually a good idea anyway
-*/
-
-/*
 Token_stream constructor: initializes buffer to empty
 */
 
@@ -110,7 +76,7 @@ Token Token_stream::get()
     switch (ch) {
     case ';':
     case 'q':
-    case '!': case '{': case '}': case '(': case ')': case '+': case '-': case '*': case '/':
+    case '!': case '{': case '}': case '(': case ')': case '+': case '-': case '*': case '/': case '%':
         return Token(ch);
     case '.':
     case '0': case '1': case '2': case '3': case '4':
@@ -136,13 +102,6 @@ void Token_stream::putback(Token t)
     buffer = t;
     full = true;
 }
-
-/*
-Tip: Let's go ahead a do some declaring. we'll go ahead and declare all of 
-our functions know, that way they can be written in any order and
-organized below. This is usually handled in a more sophisticated way, but 
-this will work for now
-*/
 
 /*
 Basic functions
@@ -179,34 +138,31 @@ double primary()
     Token t = ts.get();
     switch (t.kind) 
     {
-    case '{':
+        case '{':
         {
             double d = expression();
             t = ts.get();
             if (t.kind != '}') error("'}' expected");
             return d;
         }
-    case '(':
+        case '(':
         {
             double d = expression();
             t = ts.get();
             if (t.kind != ')') error("')' expected");
             return d;
         }
-    case 'n':
+        case 'n':
         {
             double d = t.value;
             return d;
         }
-    case 'q':
-        {
-            exit(0);
-            return 0;
-        }
-    default:
-        {
+        case '-':
+            return -primary();
+        case '+':
+            return primary();
+        default:
             error("primary expected");
-        }
     }
 }
 
@@ -237,7 +193,6 @@ double factorial()
             ts.putback(t);
             return left;
         }
-        return left;
     }
 }
 
@@ -257,21 +212,35 @@ double term()
 
     while (true) {
         switch (t.kind) {
-        case '*':
-            left *= factorial();
-            t = ts.get();
-            break;
-        case '/':
-        {
-            double d = factorial();
-            if (d == 0) error("divide by zero");
-            left /= d;
-            t = ts.get();
-            break;
-        }
-        default:
-            ts.putback(t);
-            return left;
+            case '*':
+            {
+                left *= factorial();
+                t = ts.get();
+                break;
+            }
+            case '/':
+            {
+                double d = factorial();
+                if (d == 0) error("divide by zero");
+                left /= d;
+                t = ts.get();
+                break;
+            }
+            case '%':
+            {
+                int i1 = narrow_cast<int>(left);
+                int i2 = narrow_cast<int>(factorial());
+                if (i2 == 0) error("%: divide by zero");
+                left = i1 % i2;
+                t = ts.get();
+                break;
+            }
+
+            default:
+            {
+                ts.putback(t);
+                return left;
+            }
         }
     }
 }
@@ -335,18 +304,24 @@ try {
     double val = 0;
     while (cin)
     {
+        cout << ">";
         Token t = ts.get();
-
-        if (t.kind == 'q') break;
-        if (t.kind == ';')
-            cout << "=" << val << '\n';
-        else
-            ts.putback(t);
-        val = expression();
+        while (t.kind == ';') t = ts.get();
+        if (t.kind=='q')
+        {
+            keep_window_open();
+            return 0;
+        }
+        ts.putback(t);
+        cout << "=" << expression() << '\n';
     }
+    keep_window_open();
+    return 0;
 }
-catch (exception& e) {
-    cerr << e.what() << endl;
+
+catch (runtime_error& e) {
+    cerr << e.what() << '\n';
+    keep_window_open("~~");
     return 1;
 }
 catch (...) {
