@@ -1,10 +1,48 @@
 #include "Facilities.h"
 
+const char number = 'n';
+const char quit = 'q';
+const char print = ';';
+const string prompt = "> ";
+const string result = "= ";
+
 /*
 Calculator program:
 
 This program reads simple mathematical expressions entered
 by the user and calculates and displays the results
+
+The grammar for input is:
+
+Statement:
+    Expression
+    Print
+    Quit
+
+Print:
+    ;
+
+Quit:
+    q
+
+Expression:
+    Term
+    Expression + Term
+    Expression - Term
+Term:
+    Primary
+    Term * Primary
+    Term / Primary
+    Term % Primary
+Primary:
+    Number
+    (Expression)
+    -Primary
+    +Primary
+Number:
+    floating-point-literal
+
+Input comes from cin through the Token_stream called ts.
 */
 
 /*
@@ -43,6 +81,7 @@ public:
     Token_stream();
     Token get();
     void putback(Token t);
+    void ignore(char c);
 private:
     bool full;
     Token buffer;
@@ -74,9 +113,18 @@ Token Token_stream::get()
     cin >> ch;
 
     switch (ch) {
-    case ';':
-    case 'q':
-    case '!': case '{': case '}': case '(': case ')': case '+': case '-': case '*': case '/': case '%':
+    case quit:
+    case print:
+    case '!': 
+    case '{': 
+    case '}': 
+    case '(': 
+    case ')': 
+    case '+': 
+    case '-': 
+    case '*': 
+    case '/': 
+    case '%':
         return Token(ch);
     case '.':
     case '0': case '1': case '2': case '3': case '4':
@@ -85,7 +133,7 @@ Token Token_stream::get()
         cin.putback(ch);
         double val;
         cin >> val;
-        return Token('n', val);
+        return Token(number, val);
     }
     default:
         error("Bad token");
@@ -104,6 +152,23 @@ void Token_stream::putback(Token t)
 }
 
 /*
+Token_stream member function ignore(): clears input stream and buffer.
+*/
+
+void Token_stream::ignore(char c)
+{
+    if (full && c == buffer.kind)
+    {
+        full = false;
+        return;
+    }
+    full = false;
+    char ch = 0;
+    while (cin >> ch)
+        if (ch == c)return;
+}
+
+/*
 Basic functions
 */
 
@@ -113,13 +178,13 @@ double term();
 double expression();
 
 /*
-utility functions //tip: this should grow
+utility functions
 */
 
 double calculate_factorial(int val);
 
 /*
-Global variables
+Globals
 */
 
 Token_stream ts;
@@ -152,7 +217,7 @@ double primary()
             if (t.kind != ')') error("')' expected");
             return d;
         }
-        case 'n':
+        case number:
         {
             double d = t.value;
             return d;
@@ -288,6 +353,40 @@ double calculate_factorial(int val)
 }
 
 /*
+Clears input and buffer after bad input.
+*/
+
+void clean_up_mess()
+{
+    ts.ignore(print);
+}
+
+void calculate()
+{
+    while (cin)
+    try {
+        cout << prompt;
+        Token t = ts.get();
+        while (t.kind == print) t = ts.get();
+        if (t.kind == quit) return;
+        ts.putback(t);
+        cout << result << expression() << '\n';
+    }
+    catch (exception& e) {
+        cerr << e.what() << '\n';
+        clean_up_mess();
+    }
+}
+
+void print_intro()
+{
+    cout << "Welcome to our simple calculator. Please enter expressions using \n";
+    cout << "floating-point numbers. enter ';' to calculate and display, 'q' to \n";
+    cout << "quit. The following operators are supported : \n";
+    cout << "   + - * / ( ) % \n";
+}
+
+/*
 Function: main()
 
 Description: main function of program. displays instructions on load.
@@ -297,24 +396,8 @@ and print characters.
 
 int main()
 try {
-    cout << "Welcome to our simple calculator. Please enter expressions using \n";
-    cout << "floating-point numbers. enter ';' to calculate and display, 'q' to \n";
-    cout << "quit. The following operators are supported : \n";
-    cout << "   + - * / ( ) \n";
-    double val = 0;
-    while (cin)
-    {
-        cout << ">";
-        Token t = ts.get();
-        while (t.kind == ';') t = ts.get();
-        if (t.kind=='q')
-        {
-            keep_window_open();
-            return 0;
-        }
-        ts.putback(t);
-        cout << "=" << expression() << '\n';
-    }
+    print_intro();
+    calculate();
     keep_window_open();
     return 0;
 }
