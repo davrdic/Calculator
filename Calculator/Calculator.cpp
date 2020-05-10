@@ -398,7 +398,6 @@ int main()
 try {
     print_intro();
     calculate();
-    keep_window_open();
     return 0;
 }
 
