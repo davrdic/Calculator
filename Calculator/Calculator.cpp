@@ -1,4 +1,5 @@
 #include "Facilities.h"
+#include "Token.h"
 
 const char number = 'n';
 const char quit = 'q';
@@ -44,25 +45,6 @@ Number:
 
 Input comes from cin through the Token_stream called ts.
 */
-
-/*
-Class: Token
-
-Description: This class will be used to hold user input as a
-two part object. One for its kind, the other for its value. 
-It comes equipped with two initializers, one for characters
-that have no value, the other for ones that do
-*/
-
-class Token {
-public:
-    char kind;
-    double value;
-    Token(char ch)
-        :kind(ch), value(0) { }
-    Token(char ch, double val)
-        :kind(ch), value(val) { }
-};
 
 /*
 Class: Token_stream
@@ -398,7 +380,6 @@ int main()
 try {
     print_intro();
     calculate();
-    keep_window_open();
     return 0;
 }
 
