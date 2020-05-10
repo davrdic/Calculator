@@ -1,11 +1,6 @@
 #include "Facilities.h"
+#include "GConts.h"
 #include "Token.h"
-
-const char number = 'n';
-const char quit = 'q';
-const char print = ';';
-const string prompt = "> ";
-const string result = "= ";
 
 /*
 Calculator program:
