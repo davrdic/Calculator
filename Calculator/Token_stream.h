@@ -1,5 +1,4 @@
 #pragma once
-#include "Token.h"
 
 /*
 Class: Token_stream
