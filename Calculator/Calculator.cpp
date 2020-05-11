@@ -1,10 +1,14 @@
-#include "Facilities.h"
+#include "Errors.h"
+#include "Token_stream2.h"
+#include "GConsts.h"
+#include<iostream>
 
-const char number = 'n';
-const char quit = 'q';
-const char print = ';';
-const string prompt = "> ";
-const string result = "= ";
+using std::cin;
+using std::cout;
+using std::cerr;
+using std::exception;
+
+
 
 /*
 Calculator program:
@@ -168,6 +172,12 @@ void Token_stream::ignore(char c)
         if (ch == c)return;
 }
 
+class Variable {
+public:
+    string name;
+    double value;
+};
+
 /*
 Basic functions
 */
@@ -188,6 +198,8 @@ Globals
 */
 
 Token_stream ts;
+
+Token_stream2 ts2;
 
 /*
 Function: primary()
@@ -403,7 +415,6 @@ try {
 
 catch (runtime_error& e) {
     cerr << e.what() << '\n';
-    keep_window_open("~~");
     return 1;
 }
 catch (...) {
