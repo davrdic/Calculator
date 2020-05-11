@@ -148,11 +148,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Calculator.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Token_stream.cpp" />
     <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Errors.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="GConsts.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="Token_stream.h" />
