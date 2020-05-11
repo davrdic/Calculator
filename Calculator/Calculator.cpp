@@ -1,12 +1,15 @@
 #include "Errors.h"
 #include "Token_stream.h"
 #include "GConsts.h"
-#include<iostream>
+#include <iostream>
+#include "Variable.h"
+#include <vector>
 
 using std::cin;
 using std::cout;
 using std::cerr;
 using std::exception;
+using std::vector;
 
 /*
 Calculator program:
@@ -72,12 +75,15 @@ utility functions
 */
 
 double calculate_factorial(int val);
+double get_value(string s);
+void set_value(string s, double d);
 
 /*
 Globals
 */
 
 Token_stream ts;
+vector<Variable> var_table;
 
 /*
 Function: primary()
@@ -240,6 +246,23 @@ double calculate_factorial(int val)
     for (int i = val - 1; i > 0; i--)
         val *= i;
     return val;
+}
+
+double get_value(string s)
+{
+    for (const Variable& v : var_table)
+        if (v.name == s) return v.value;
+    error("get: undefined variable ", s);
+}
+
+void set_value(string s, double d)
+{
+    for (Variable& v : var_table)
+        if (v.name == s) {
+            v.value = d;
+            return;
+        }
+    error("set: undefined variable ", s);
 }
 
 /*
