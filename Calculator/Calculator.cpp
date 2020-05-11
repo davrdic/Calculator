@@ -56,11 +56,7 @@ It comes equipped with two initializers, one for characters
 that have no value, the other for ones that do
 */
 
-class Variable {
-public:
-    string name;
-    double value;
-};
+
 
 /*
 Basic functions
