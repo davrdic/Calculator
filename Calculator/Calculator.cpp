@@ -1,5 +1,5 @@
 #include "Errors.h"
-#include "Token_stream2.h"
+#include "Token_stream.h"
 #include "GConsts.h"
 #include<iostream>
 
@@ -58,120 +58,6 @@ It comes equipped with two initializers, one for characters
 that have no value, the other for ones that do
 */
 
-class Token {
-public:
-    char kind;
-    double value;
-    Token(char ch)
-        :kind(ch), value(0) { }
-    Token(char ch, double val)
-        :kind(ch), value(val) { }
-};
-
-/*
-Class: Token_stream
-
-Description: This class will be used as a buffer to hold a token.
-It comes equipped with two public functions, one to get a token
-from user input or the buffer. the other to put a token in the
-buffer. two private variables will be needed by for member functions
-to carry out their task. One is a Token that is the actual buffer,
-the other is a bool that keeps track of whether or not the buffer
-is full
-*/
-
-class Token_stream {
-public:
-    Token_stream();
-    Token get();
-    void putback(Token t);
-    void ignore(char c);
-private:
-    bool full;
-    Token buffer;
-};
-
-/*
-Token_stream constructor: initializes buffer to empty
-*/
-
-Token_stream::Token_stream()
-    :full(false), buffer(0)
-{
-}
-
-/*
-Token_stream member function get(): gets a token from the buffer or a 
-character from the user input stream and assigns it to the appropriate 
-token
-*/
-
-Token Token_stream::get()
-{
-    if (full) {
-        full = false;
-        return buffer;
-    }
-
-    char ch;
-    cin >> ch;
-
-    switch (ch) {
-    case quit:
-    case print:
-    case '!': 
-    case '{': 
-    case '}': 
-    case '(': 
-    case ')': 
-    case '+': 
-    case '-': 
-    case '*': 
-    case '/': 
-    case '%':
-        return Token(ch);
-    case '.':
-    case '0': case '1': case '2': case '3': case '4':
-    case '5': case '6': case '7': case '8': case '9':
-    {
-        cin.putback(ch);
-        double val;
-        cin >> val;
-        return Token(number, val);
-    }
-    default:
-        error("Bad token");
-    }
-}
-
-/*
-Token_stream member function putback(): puts a token in the buffer
-*/
-
-void Token_stream::putback(Token t)
-{
-    if (full) error("putback() into a full buffer");
-    buffer = t;
-    full = true;
-}
-
-/*
-Token_stream member function ignore(): clears input stream and buffer.
-*/
-
-void Token_stream::ignore(char c)
-{
-    if (full && c == buffer.kind)
-    {
-        full = false;
-        return;
-    }
-    full = false;
-    char ch = 0;
-    while (cin >> ch)
-        if (ch == c)return;
-}
-
 class Variable {
 public:
     string name;
@@ -197,9 +83,7 @@ double calculate_factorial(int val);
 Globals
 */
 
-Token_stream ts;
-
-Token_stream2 ts2;
+Token_stream ts2;
 
 /*
 Function: primary()
@@ -212,20 +96,20 @@ another expression and then return a number to term()
 
 double primary()
 {
-    Token t = ts.get();
+    Token t = ts2.get();
     switch (t.kind) 
     {
         case '{':
         {
             double d = expression();
-            t = ts.get();
+            t = ts2.get();
             if (t.kind != '}') error("'}' expected");
             return d;
         }
         case '(':
         {
             double d = expression();
-            t = ts.get();
+            t = ts2.get();
             if (t.kind != ')') error("')' expected");
             return d;
         }
@@ -255,7 +139,7 @@ evaluated expression to term()
 double factorial()
 {
     double left = primary();
-    Token t = ts.get();
+    Token t = ts2.get();
 
     while (true)
     {
@@ -267,7 +151,7 @@ double factorial()
             return left;
         }
         default:
-            ts.putback(t);
+            ts2.putback(t);
             return left;
         }
     }
@@ -285,14 +169,14 @@ to expression()
 double term()
 {
     double left = factorial();
-    Token t = ts.get();
+    Token t = ts2.get();
 
     while (true) {
         switch (t.kind) {
             case '*':
             {
                 left *= factorial();
-                t = ts.get();
+                t = ts2.get();
                 break;
             }
             case '/':
@@ -300,7 +184,7 @@ double term()
                 double d = factorial();
                 if (d == 0) error("divide by zero");
                 left /= d;
-                t = ts.get();
+                t = ts2.get();
                 break;
             }
             case '%':
@@ -309,13 +193,13 @@ double term()
                 int i2 = narrow_cast<int>(factorial());
                 if (i2 == 0) error("%: divide by zero");
                 left = i1 % i2;
-                t = ts.get();
+                t = ts2.get();
                 break;
             }
 
             default:
             {
-                ts.putback(t);
+                ts2.putback(t);
                 return left;
             }
         }
@@ -332,19 +216,19 @@ combines the previous term() with the next term() and returns the result
 double expression()
 {
     double left = term();
-    Token t = ts.get();
+    Token t = ts2.get();
     while (true) {
         switch (t.kind) {
         case '+':
             left += term();
-            t = ts.get();
+            t = ts2.get();
             break;
         case '-':
             left -= term();
-            t = ts.get();
+            t = ts2.get();
             break;
         default:
-            ts.putback(t);
+            ts2.putback(t);
             return left;
         }
     }
@@ -370,7 +254,7 @@ Clears input and buffer after bad input.
 
 void clean_up_mess()
 {
-    ts.ignore(print);
+    ts2.ignore(print);
 }
 
 void calculate()
@@ -378,10 +262,10 @@ void calculate()
     while (cin)
     try {
         cout << prompt;
-        Token t = ts.get();
-        while (t.kind == print) t = ts.get();
+        Token t = ts2.get();
+        while (t.kind == print) t = ts2.get();
         if (t.kind == quit) return;
-        ts.putback(t);
+        ts2.putback(t);
         cout << result << expression() << '\n';
     }
     catch (exception& e) {

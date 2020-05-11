@@ -18,24 +18,21 @@
     <ClCompile Include="Calculator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Token_stream2.cpp">
+    <ClCompile Include="Token_stream.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Facilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Token2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Token_stream2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GConsts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Errors.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Token_stream.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
