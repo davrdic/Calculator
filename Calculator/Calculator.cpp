@@ -2,7 +2,6 @@
 #include "Token_stream.h"
 #include "GConsts.h"
 #include<iostream>
-#include "Token.h"
 
 using std::cin;
 using std::cout;
@@ -84,7 +83,7 @@ double calculate_factorial(int val);
 Globals
 */
 
-Token_stream ts;
+Token_stream ts2;
 
 /*
 Function: primary()
@@ -97,20 +96,20 @@ another expression and then return a number to term()
 
 double primary()
 {
-    Token t = ts.get();
+    Token t = ts2.get();
     switch (t.kind) 
     {
         case '{':
         {
             double d = expression();
-            t = ts.get();
+            t = ts2.get();
             if (t.kind != '}') error("'}' expected");
             return d;
         }
         case '(':
         {
             double d = expression();
-            t = ts.get();
+            t = ts2.get();
             if (t.kind != ')') error("')' expected");
             return d;
         }
@@ -140,7 +139,7 @@ evaluated expression to term()
 double factorial()
 {
     double left = primary();
-    Token t = ts.get();
+    Token t = ts2.get();
 
     while (true)
     {
@@ -152,7 +151,7 @@ double factorial()
             return left;
         }
         default:
-            ts.putback(t);
+            ts2.putback(t);
             return left;
         }
     }
@@ -170,14 +169,14 @@ to expression()
 double term()
 {
     double left = factorial();
-    Token t = ts.get();
+    Token t = ts2.get();
 
     while (true) {
         switch (t.kind) {
             case '*':
             {
                 left *= factorial();
-                t = ts.get();
+                t = ts2.get();
                 break;
             }
             case '/':
@@ -185,7 +184,7 @@ double term()
                 double d = factorial();
                 if (d == 0) error("divide by zero");
                 left /= d;
-                t = ts.get();
+                t = ts2.get();
                 break;
             }
             case '%':
@@ -194,13 +193,13 @@ double term()
                 int i2 = narrow_cast<int>(factorial());
                 if (i2 == 0) error("%: divide by zero");
                 left = i1 % i2;
-                t = ts.get();
+                t = ts2.get();
                 break;
             }
 
             default:
             {
-                ts.putback(t);
+                ts2.putback(t);
                 return left;
             }
         }
@@ -217,19 +216,19 @@ combines the previous term() with the next term() and returns the result
 double expression()
 {
     double left = term();
-    Token t = ts.get();
+    Token t = ts2.get();
     while (true) {
         switch (t.kind) {
         case '+':
             left += term();
-            t = ts.get();
+            t = ts2.get();
             break;
         case '-':
             left -= term();
-            t = ts.get();
+            t = ts2.get();
             break;
         default:
-            ts.putback(t);
+            ts2.putback(t);
             return left;
         }
     }
@@ -255,7 +254,7 @@ Clears input and buffer after bad input.
 
 void clean_up_mess()
 {
-    ts.ignore(print);
+    ts2.ignore(print);
 }
 
 void calculate()
@@ -263,10 +262,10 @@ void calculate()
     while (cin)
     try {
         cout << prompt;
-        Token t = ts.get();
-        while (t.kind == print) t = ts.get();
+        Token t = ts2.get();
+        while (t.kind == print) t = ts2.get();
         if (t.kind == quit) return;
-        ts.putback(t);
+        ts2.putback(t);
         cout << result << expression() << '\n';
     }
     catch (exception& e) {

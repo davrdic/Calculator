@@ -1,6 +1,5 @@
 #include "Errors.h"
 #include "Token_stream.h"
-#include "Token.h"
 #include "GConsts.h"
 #include <iostream>
 
