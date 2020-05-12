@@ -47,13 +47,18 @@ Token Token_stream::get()
     case '.':
     case '0': case '1': case '2': case '3': case '4':
     case '5': case '6': case '7': case '8': case '9':
-    {
         cin.putback(ch);
         double val;
         cin >> val;
         return Token(number, val);
-    }
     default:
+        if (isalpha(ch)) {
+            cin.putback(ch);
+            string s;
+            cin >> s;
+            if (s == declkey) return Token(let);
+            return Token{ name,s };
+        }
         error("Bad token");
     }
 }

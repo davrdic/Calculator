@@ -1,10 +1,11 @@
 #pragma once
 #include<string>
 
-using std::string;
-
 const char number = 'n';
 const char quit = 'q';
 const char print = ';';
-const string prompt = "> ";
-const string result = "= ";
+const std::string prompt = "> ";
+const std::string result = "= ";
+const char name = 'a';
+const char let = 'L';
+const string declkey = "let";

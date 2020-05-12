@@ -213,7 +213,7 @@ void calculate()
         while (t.kind == print) t = ts.get();
         if (t.kind == quit) return;
         ts.putback(t);
-        cout << result << expression() << '\n';
+        cout << result << statement() << '\n';
     }
     catch (exception& e) {
         cerr << e.what() << '\n';
@@ -227,4 +227,44 @@ void print_intro()
     cout << "floating-point numbers. enter ';' to calculate and display, 'q' to \n";
     cout << "quit. The following operators are supported : \n";
     cout << "   + - * / ( ) % \n";
+}
+
+double statement()
+{
+    Token t = ts.get();
+    switch (t.kind) {
+    case let:
+        return declaration();
+    default:
+        ts.putback(t);
+        return expression();
+    }
+}
+
+bool is_declared(string var)
+{
+    for (const Variable& v : var_table)
+        if (v.name == var) return true;
+    return false;
+}
+
+double define_name(string var, double val)
+{
+    if (is_declared(var)) error(var, " declared twice");
+    var_table.push_back(Variable{ var, val });
+    return val;
+}
+
+double declaration()
+{
+    Token t = ts.get();
+    if (t.kind != name) error("name expected in declaration");
+    string var_name = t.name;
+
+    Token t2 = ts.get();
+    if (t2.kind != '=') error("= missin in declarion of ", var_name);
+
+    double d = expression();
+    define_name(var_name, d);
+    return d;
 }
