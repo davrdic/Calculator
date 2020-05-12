@@ -236,8 +236,10 @@ double statement()
     case let:
         return declaration();
     default:
+    {
         ts.putback(t);
         return expression();
+    }
     }
 }
 
