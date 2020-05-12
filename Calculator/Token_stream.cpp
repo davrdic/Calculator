@@ -1,4 +1,5 @@
 #include "Errors.h"
+#include "Functions.h"
 #include "Token_stream.h"
 #include "GConsts.h"
 #include <iostream>
@@ -43,6 +44,7 @@ Token Token_stream::get()
     case '*':
     case '/':
     case '%':
+    case '=':
         return Token(ch);
     case '.':
     case '0': case '1': case '2': case '3': case '4':
@@ -57,7 +59,8 @@ Token Token_stream::get()
             string s;
             cin >> s;
             if (s == declkey) return Token(let);
-            return Token{ name,s };
+            if (is_declared(s)) return Token{ number, get_value(s) };
+            else return Token{ name,s };
         }
         error("Bad token");
     }

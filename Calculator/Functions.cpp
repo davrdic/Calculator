@@ -236,10 +236,8 @@ double statement()
     case let:
         return declaration();
     default:
-    {
         ts.putback(t);
         return expression();
-    }
     }
 }
 
@@ -268,5 +266,6 @@ double declaration()
 
     double d = expression();
     define_name(var_name, d);
+    set_value(var_name, d);
     return d;
 }
