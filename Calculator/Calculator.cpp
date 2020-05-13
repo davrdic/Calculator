@@ -59,9 +59,14 @@ and print characters.
 
 int main()
 try {
+    define_name("pi", 3.1415926535);
+    define_name("e", 2.7182818284);
+
     print_intro();
     calculate();
     return 0;
+
+
 }
 
 catch (runtime_error& e) {
