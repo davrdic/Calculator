@@ -43,6 +43,11 @@ double primary()
     Token t = ts.get();
     switch (t.kind)
     {
+    case square:
+    {
+        double d = expression();
+        return sqrt(d);
+    }
     case '{':
     {
         double d = expression();

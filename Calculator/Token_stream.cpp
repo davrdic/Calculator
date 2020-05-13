@@ -59,9 +59,10 @@ Token Token_stream::get()
             s += ch;
             while (cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
             cin.putback(ch);
-            if (s == declkey) return Token{ let };
-            if (is_declared(s)) return Token{ number, get_value(s) };
-            return Token{ name,s };
+            if (s == declkey) return Token(let);
+            if (s == squarekey) return Token(square);
+            if (is_declared(s)) return Token(number, get_value(s));
+            return Token(name,s);
         }
         error("Bad token");
     }
