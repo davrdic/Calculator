@@ -55,12 +55,13 @@ Token Token_stream::get()
         return Token(number, val);
     default:
         if (isalpha(ch)) {
-            cin.putback(ch);
             string s;
-            cin >> s;
-            if (s == declkey) return Token(let);
+            s += ch;
+            while (cin.get(ch) && (isalpha(ch) || isdigit(ch))) s += ch;
+            cin.putback(ch);
+            if (s == declkey) return Token{ let };
             if (is_declared(s)) return Token{ number, get_value(s) };
-            else return Token{ name,s };
+            return Token{ name,s };
         }
         error("Bad token");
     }
