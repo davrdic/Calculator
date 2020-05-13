@@ -45,8 +45,24 @@ double primary()
     {
     case square:
     {
+        t = ts.get();
+        if (t.kind != '(') error("'(' expected");
         double d = expression();
+        t = ts.get();
+        if (t.kind != ')') error("')' expected");
         return sqrt(d);
+    }
+    case power:
+    {
+        t = ts.get();
+        if (t.kind != '(') error("'(' expected");
+        double d1 = expression();
+        t = ts.get();
+        if (t.kind != ',') error("',' expected");
+        double d2 = expression();
+        t = ts.get();
+        if (t.kind != ')') error("')' expected");
+        return pow(d1, d2);
     }
     case '{':
     {

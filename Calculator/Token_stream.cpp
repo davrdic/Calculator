@@ -45,6 +45,7 @@ Token Token_stream::get()
     case '/':
     case '%':
     case '=':
+    case ',':
         return Token(ch);
     case '.':
     case '0': case '1': case '2': case '3': case '4':
@@ -61,6 +62,7 @@ Token Token_stream::get()
             cin.putback(ch);
             if (s == declkey) return Token(let);
             if (s == squarekey) return Token(square);
+            if (s == powerkey)  return Token(power);
             if (is_declared(s)) return Token(number, get_value(s));
             return Token(name,s);
         }
