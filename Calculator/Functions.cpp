@@ -15,6 +15,8 @@ using std::vector;
 Token_stream ts;
 vector<Variable> var_table;
 
+extern bool ian;
+
 /*
 Function: calculate_factorial()
 
