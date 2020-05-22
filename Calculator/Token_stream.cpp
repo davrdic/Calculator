@@ -77,8 +77,7 @@ Token Token_stream::get()
     //else {
     //    cin.unget();
     //    cin >> ch;
-    //}
-    new_line(ch);
+    //
     switch (ch) {
     case quit:
     case print:
