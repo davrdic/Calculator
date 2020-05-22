@@ -15,18 +15,6 @@ Token_stream::Token_stream()
 {
 }
 
-bool new_line(char& ch)
-{
-    if (cin.get() == '\n') {
-        cin.unget();
-        return true;
-    }
-    else {
-        cin.unget();
-        return false;
-    }
-}
-
 /*
 Token_stream member function get(): gets a token from the buffer or a
 character from the user input stream and assigns it to the appropriate
@@ -41,9 +29,6 @@ Token Token_stream::get()
     }
 
     char ch;
-    int i = 0;
-
-    if (new_line && i > 0) cin.putback(';');
     cin >> ch;
 
     switch (ch) {
@@ -109,7 +94,6 @@ void Token_stream::ignore(char c)
     full = false;
     char ch = 0;
     while (cin >> ch) {
-        new_line(ch);
         if (ch == c) {
             return;
         }
