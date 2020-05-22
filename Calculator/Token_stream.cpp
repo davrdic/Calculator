@@ -68,7 +68,7 @@ Token Token_stream::get()
     }
 
     char ch;
-    cin >> ch;
+    if (!new_line(ch)) cin >> ch;
     //if (cin.get() == '\n')
     //{
     //   // cin.unget();
