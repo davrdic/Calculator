@@ -41,6 +41,9 @@ Token Token_stream::get()
     }
 
     char ch;
+    int i = 0;
+
+    if (new_line && i > 0) cin.putback(';');
     cin >> ch;
 
     switch (ch) {
