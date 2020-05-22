@@ -103,7 +103,7 @@ double primary()
         }
         else {
             ts.putback(t);
-            return -primary();
+            return +primary();
         }
     default:
         error("primary expected");

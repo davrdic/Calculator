@@ -6,6 +6,8 @@
 
 using std::cin;
 
+int gottem = 0;
+
 /*
 Token_stream constructor: initializes buffer to empty
 */
@@ -15,9 +17,25 @@ Token_stream::Token_stream()
 {
 }
 
-bool new_line()
+//bool new_line(char& ch)
+//{
+//    if (cin.get() == '\n') {
+//        cin.unget();
+//        return true;
+//    }
+//    else {
+//        cin.unget();
+//        return false;
+//    }
+//}
+
+void check(char& ch)
 {
-    if (cin.get() == '\n')
+    if (cin.get() == '\n') {
+        cin.unget();
+        ch = print;
+    }
+    else cin.unget();
 }
 
 /*
@@ -34,7 +52,15 @@ Token Token_stream::get()
     }
 
     char ch;
-    cin >> ch;
+    if (cin.get() == '\n')
+    {
+       // cin.unget();
+        ch = print;
+    }
+    else {
+        cin.unget();
+        cin >> ch;
+    }
 
     switch (ch) {
     case quit:
