@@ -86,9 +86,27 @@ double primary()
         return d;
     }
     case '-':
-        return -primary();
+        t = ts.get();
+        if (t.kind == '-')
+        {
+            ts.putback(t);
+            error("poop");
+        }
+        else {
+            ts.putback(t);
+            return -primary();
+        }
     case '+':
-        return primary();
+        t = ts.get();
+        if (t.kind == '+')
+        {
+            ts.putback(t);
+            error("poop");
+        }
+        else {
+            ts.putback(t);
+            return +primary();
+        }
     default:
         error("primary expected");
     }
