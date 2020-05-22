@@ -18,7 +18,7 @@ Token_stream::Token_stream()
 bool new_line(char& ch)
 {
     if (cin.get() == '\n') {
-        ch = ';';
+        cin.unget();
         return true;
     }
     else {
@@ -41,7 +41,7 @@ Token Token_stream::get()
     }
 
     char ch;
-    if (!new_line(ch)) cin >> ch;
+    cin >> ch;
 
     switch (ch) {
     case quit:
