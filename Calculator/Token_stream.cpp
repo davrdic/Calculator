@@ -31,11 +31,15 @@ Token_stream::Token_stream()
 
 void check(char& ch)
 {
-    if (cin.get() == '\n') {
-        cin.unget();
+    if (cin.get() == '\n')
+    {
+        // cin.unget();
         ch = print;
     }
-    else cin.unget();
+    else {
+        cin.unget();
+        cin >> ch;
+    }
 }
 
 /*
@@ -51,17 +55,17 @@ Token Token_stream::get()
         return buffer;
     }
 
-    char ch;
-    if (cin.get() == '\n')
-    {
-       // cin.unget();
-        ch = print;
-    }
-    else {
-        cin.unget();
-        cin >> ch;
-    }
-
+    char ch = '';
+    //if (cin.get() == '\n')
+    //{
+    //   // cin.unget();
+    //    ch = print;
+    //}
+    //else {
+    //    cin.unget();
+    //    cin >> ch;
+    //}
+    check(ch);
     switch (ch) {
     case quit:
     case print:
