@@ -29,16 +29,28 @@ Token_stream::Token_stream()
 //    }
 //}
 
-void check(char& ch)
+//void check(char& ch)
+//{
+//    if (cin.get() == '\n')
+//    {
+//        // cin.unget();
+//        ch = print;
+//    }
+//    else {
+//        cin.unget();
+//        cin >> ch;
+//    }
+//}
+
+bool new_line(char& ch)
 {
-    if (cin.get() == '\n')
-    {
-        // cin.unget();
-        ch = print;
+    if (cin.get() == '\n') {
+        ch = ';';
+        return true;
     }
     else {
         cin.unget();
-        cin >> ch;
+        return false;
     }
 }
 
@@ -55,7 +67,8 @@ Token Token_stream::get()
         return buffer;
     }
 
-    char ch = '';
+    char ch;
+    cin >> ch;
     //if (cin.get() == '\n')
     //{
     //   // cin.unget();
@@ -65,7 +78,7 @@ Token Token_stream::get()
     //    cin.unget();
     //    cin >> ch;
     //}
-    check(ch);
+    new_line(ch);
     switch (ch) {
     case quit:
     case print:
