@@ -15,6 +15,11 @@ Token_stream::Token_stream()
 {
 }
 
+bool new_line()
+{
+    if (cin.get() == '\n')
+}
+
 /*
 Token_stream member function get(): gets a token from the buffer or a
 character from the user input stream and assigns it to the appropriate
