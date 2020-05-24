@@ -48,36 +48,57 @@ double primary()
     case square:
     {
         t = ts.get();
-        if (t.kind != '(') error("'(' expected");
+        if (t.kind != '(') {
+            ts.putback(t);
+            error("'(' expected");
+        }
         double d = expression();
         t = ts.get();
-        if (t.kind != ')') error("')' expected");
+        if (t.kind != ')') {
+            ts.putback(t);
+            error("')' expected");
+        }
         return sqrt(d);
     }
     case power:
     {
         t = ts.get();
-        if (t.kind != '(') error("'(' expected");
+        if (t.kind != '(') {
+            ts.putback(t);
+            error("'(' expected");
+        }
         double d1 = expression();
         t = ts.get();
-        if (t.kind != ',') error("',' expected");
+        if (t.kind != ',') {
+            ts.putback(t);
+            error("',' expected");
+        }
         double d2 = expression();
         t = ts.get();
-        if (t.kind != ')') error("')' expected");
+        if (t.kind != ')') {
+            ts.putback(t);
+            error("')' expected");
+        }
         return pow(d1, d2);
     }
     case '{':
     {
         double d = expression();
         t = ts.get();
-        if (t.kind != '}') error("'}' expected");
+        if (t.kind != '}') {
+            ts.putback(t);
+            error("'}' expected");
+        }
         return d;
     }
     case '(':
     {
         double d = expression();
         t = ts.get();
-        if (t.kind != ')') error("')' expected");
+        if (t.kind != ')') {
+            ts.putback(t);
+            error("')' expected");
+        }
         return d;
     }
     case number:
@@ -108,6 +129,7 @@ double primary()
             return +primary();
         }
     default:
+        ts.putback(t);
         error("primary expected");
     }
 }
@@ -205,13 +227,31 @@ double expression()
     while (true) {
         switch (t.kind) {
         case '+':
-            left += term();
             t = ts.get();
-            break;
+            if (t.kind == '+')
+            {
+                ts.putback(t);
+                error("poop");
+            }
+            else {
+                ts.putback(t);
+                left += term();
+                t = ts.get();
+                break;
+            }
         case '-':
-            left -= term();
             t = ts.get();
-            break;
+            if (t.kind == '-')
+            {
+                ts.putback(t);
+                error("poop");
+            }
+            else {
+                ts.putback(t);
+                left -= term();
+                t = ts.get();
+                break;
+            }
         default:
             ts.putback(t);
             return left;
