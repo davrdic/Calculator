@@ -6,6 +6,10 @@
 
 using std::cin;
 
+extern Token_stream ts;
+
+bool new_line = false;
+
 /*
 Token_stream constructor: initializes buffer to empty
 */
@@ -13,6 +17,20 @@ Token_stream constructor: initializes buffer to empty
 Token_stream::Token_stream()
     :full(false), buffer(0)
 {
+}
+
+void chk_nw_ln(char& ch)
+{
+    if (cin.get() == '\n'){
+        ch = print;
+        new_line = true;
+    }
+    else {
+        cin.unget();
+        cin >> ch;
+        new_line = false;
+    }
+        
 }
 
 /*
@@ -29,7 +47,8 @@ Token Token_stream::get()
     }
 
     char ch;
-    cin >> ch;
+
+    chk_nw_ln(ch);
 
     switch (ch) {
     case quit:
@@ -87,14 +106,17 @@ Token_stream member function ignore(): clears input stream and buffer.
 
 void Token_stream::ignore(char c)
 {
+    Token t;
+
     if (full && c == buffer.kind) {
         full = false;
         return;
     }
     full = false;
-    char ch = 0;
-    while (cin >> ch) {
-        if (ch == c) {
+
+    while (true) {
+        t = ts.get();
+        if (t.kind == print) {
             return;
         }
     }
